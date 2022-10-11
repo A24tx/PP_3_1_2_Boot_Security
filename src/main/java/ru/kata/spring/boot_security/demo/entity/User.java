@@ -11,6 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usertable")
+@NamedEntityGraph(name = "User.roles",
+        attributeNodes = @NamedAttributeNode("roles"))
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class User implements UserDetails {
     private boolean enabled = true;
     private boolean credentialsExpired = false;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "users_and_roles",
             joinColumns = @JoinColumn(name = "id"),

@@ -15,7 +15,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String userList(Model model) {
+    public String showUserList(Model model) {
         model.addAttribute("users", myUserService.getUsers());
         return "admin";
     }
@@ -49,7 +49,7 @@ public class AdminController {
 
     @PostMapping("/admin/updateUser")
     public String updateUser(@ModelAttribute("user") User user) {
-        myUserService.saveUser(user); // TODO: add update user method
+        myUserService.saveUser(user);
         return "redirect:/admin";
     }
 

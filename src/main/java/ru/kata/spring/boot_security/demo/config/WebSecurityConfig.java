@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,13 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.init.InitialUsers;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.MyUserDetailsService;
-
-import java.util.HashSet;
-import java.util.Set;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -24,13 +20,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
     private MyUserDetailsService userDetailsService;
 
-    // to be removed
-    @Autowired
     private RoleRepository roleRepository;
 
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, MyUserDetailsService userDetailsService) {
+    public WebSecurityConfig(RoleRepository roleRepository, SuccessUserHandler successUserHandler, MyUserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
         this.userDetailsService = userDetailsService;
+        this.roleRepository = roleRepository;
     }
 
     @Bean
@@ -50,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers( "/login").not().fullyAuthenticated()
+                .antMatchers("/login").not().fullyAuthenticated()
                 .antMatchers("/", "/index").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasRole("USER")
@@ -73,8 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsService() {
         // роли по умолчанию
-        userDetailsService.addInitialRoles();
-
+        InitialUsers.addInitialUsersAndRoles((UserService) userDetailsService, roleRepository);
 
         return userDetailsService;
     }

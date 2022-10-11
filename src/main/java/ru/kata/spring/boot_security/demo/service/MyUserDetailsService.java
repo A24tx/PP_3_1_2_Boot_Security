@@ -5,18 +5,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.entity.Role;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.persistence.EntityManager;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+@Transactional()
+public class MyUserDetailsService implements UserDetailsService, UserService {
 
     private UserRepository ur;
     private RoleRepository rr;
@@ -28,55 +26,39 @@ public class MyUserDetailsService implements UserDetailsService {
         this.rr = rr;
     }
 
-
-    public boolean saveUser(User u) {
+    @Override
+    public void saveUser(User u) {
         User fromDB = ur.findByUsername(u.getUsername());
-
-        if (!(fromDB == null)) {
-            return false;
+        if (fromDB == null) {
+            u.setPassword(bcrypt.encode(u.getPassword()));
+            ur.save(u);
         }
-        u.setPassword(bcrypt.encode(u.getPassword()));
-        ur.save(u);
-        return true;
     }
 
-
+    @Override
     public List<User> getUsers() {
         return ur.findAll();
     }
 
+    @Override
     public User getUserById(Long id) {
         return ur.findById(id).orElse(new User());
     }
 
+    @Override
     public void removeUser(Long id) {
         if (ur.findById(id).isPresent()) {
             ur.deleteById(id);
         }
     }
 
-    public void addInitialRoles() {
-        User user = new User("user", "user");
-        User admin = new User("admin", "admin");
-        Role userRole = new Role(1L, "ROLE_USER");
-        Role adminRole = new Role(2L, "ROLE_ADMIN");
 
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(userRole);
-        user.setRoles(userRoles);
-
-        Set<Role> adminRoles = new HashSet<>();
-        adminRoles.add(adminRole);
-        adminRoles.add(userRole);
-        admin.setRoles(adminRoles);
-
-        rr.save(userRole);
-        rr.save(adminRole);
-
-        saveUser(user);
-        saveUser(admin);
-    }
-
+    /**
+     * > Зачем findByUsername() когда есть loadUserByUsername()?
+     * <p>
+     * Не понял к чему этот вопрос. Разве это не методы разных слоев
+     * приложения?
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails ud = ur.findByUsername(username);
