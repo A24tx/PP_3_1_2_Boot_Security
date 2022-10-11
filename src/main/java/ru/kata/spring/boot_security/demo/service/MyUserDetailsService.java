@@ -58,18 +58,19 @@ public class MyUserDetailsService implements UserDetailsService {
     public void addInitialRoles() {
         User user = new User("user", "user");
         User admin = new User("admin", "admin");
-        Role role = new Role(1L, "ROLE_USER");
+        Role userRole = new Role(1L, "ROLE_USER");
         Role adminRole = new Role(2L, "ROLE_ADMIN");
 
         Set<Role> userRoles = new HashSet<>();
-        userRoles.add(role);
+        userRoles.add(userRole);
         user.setRoles(userRoles);
 
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(adminRole);
+        adminRoles.add(userRole);
         admin.setRoles(adminRoles);
 
-        rr.save(role);
+        rr.save(userRole);
         rr.save(adminRole);
 
         saveUser(user);

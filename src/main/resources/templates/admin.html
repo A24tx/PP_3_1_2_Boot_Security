@@ -12,8 +12,9 @@
         <table class="table table-bordered table-responsive-md ">
             <thead>
             <tr>
-                <th> NAME</th>
-                <th> PASSWORD</th>
+                <th> Name</th>
+                <th> Password</th>
+                <th> Id</th>
             </tr>
             </thead>
             <tbody>
@@ -23,13 +24,14 @@
             <tr th:each="user : ${users}">
                 <td><span th:text="${user.username}"> Username </span></td>
                 <td><span th:text="${user.password}"> Password </span></td>
+                <td><span th:text="${user.id}"> Id </span></td>
                 <td><a th:href="@{/admin/updateUserForm/{id}(id=${user.id})}" class="btn btn-primary">Update</a>
                     <a th:href="@{/admin/delete/{id}(id=${user.id})}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
             </tbody>
         </table>
-
+        <a th:href="@{/user}" class="btn .btn-info">My account</a>
         <a th:href="@{/logout}" class="btn btn-warning">Log out</a>
 
     </div>
