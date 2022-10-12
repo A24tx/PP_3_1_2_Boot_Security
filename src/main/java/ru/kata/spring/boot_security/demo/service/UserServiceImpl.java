@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class MyUserDetailsService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private UserRepository ur;
     private RoleRepository rr;
     private BCryptPasswordEncoder bcrypt;
 
-    public MyUserDetailsService(UserRepository ur, RoleRepository rr, BCryptPasswordEncoder bcrypt) {
+    public UserServiceImpl(UserRepository ur, RoleRepository rr, BCryptPasswordEncoder bcrypt) {
         this.ur = ur;
         this.bcrypt = bcrypt;
         this.rr = rr;

@@ -4,13 +4,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.service.MyUserDetailsService;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 @Controller
 public class AdminController {
-    private MyUserDetailsService myUserService;
+    private UserServiceImpl myUserService;
 
-    public AdminController(MyUserDetailsService myUserService) {
+    public AdminController(UserServiceImpl myUserService) {
         this.myUserService = myUserService;
     }
 
