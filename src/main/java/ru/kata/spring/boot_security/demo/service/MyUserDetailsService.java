@@ -53,12 +53,6 @@ public class MyUserDetailsService implements UserDetailsService, UserService {
     }
 
 
-    /**
-     * > Зачем findByUsername() когда есть loadUserByUsername()?
-     * <p>
-     * Не понял к чему этот вопрос. Разве это не методы разных слоев
-     * приложения?
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails ud = ur.findByUsername(username);
