@@ -11,8 +11,8 @@ import java.util.Set;
 public class InitialUsers {
 
     public static void addInitialUsersAndRoles(UserService us, RoleRepository rr) {
-        User user = new User("user", "user");
-        User admin = new User("admin", "admin");
+        User user = new User("user@user.com", "user");
+        User admin = new User("admin@admin.com", "admin");
         Role userRole = new Role(1L, "ROLE_USER");
         Role adminRole = new Role(2L, "ROLE_ADMIN");
 

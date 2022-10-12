@@ -12,7 +12,7 @@
         <table class="table table-bordered table-responsive-md ">
             <thead>
             <tr>
-                <th> Name</th>
+                <th> Email</th>
                 <th> Password</th>
                 <th> Id</th>
             </tr>
@@ -22,7 +22,7 @@
                 <td colspan="3">No users</td>
             </tr>
             <tr th:each="user : ${users}">
-                <td><span th:text="${user.username}"> Username </span></td>
+                <td><span th:text="${user.username}"> Email </span></td>
                 <td><span th:text="${user.password}"> Password </span></td>
                 <td><span th:text="${user.id}"> Id </span></td>
                 <td><a th:href="@{/admin/updateUserForm/{id}(id=${user.id})}" class="btn btn-primary">Update</a>

@@ -45,14 +45,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login").not().fullyAuthenticated()
                 .antMatchers("/", "/index").permitAll()
+                .antMatchers("/login").not().fullyAuthenticated()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
+                .formLogin().successHandler(successUserHandler).permitAll()
                 .and()
                 .logout()
                 .permitAll()
