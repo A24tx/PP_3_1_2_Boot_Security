@@ -1,10 +1,14 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+
+import java.util.Arrays;
 
 @Controller
 public class AdminController {
@@ -15,8 +19,12 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String showUserList(Model model) {
+    public String showAdminPage(Model model) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("users", myUserService.getUsers());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("newuser", new User());
+        model.addAttribute("allroles", myUserService.getAllRoles());
         return "admin";
     }
 
@@ -26,12 +34,17 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/newUserForm")
-    public String showFormForAddingUser(Model model) {
-        User u = new User();
-        model.addAttribute("user", u);
-        return "addUser";
+    @GetMapping("/admin/user")
+    public String showAdminPageForUser(@PathVariable(value = "userId") long id, Model model) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("users", myUserService.getUsers());
+        model.addAttribute("currentuser", currentUser);
+        User u = myUserService.getUserById(id);
+
+        return "admin";
     }
+
+
 
     @GetMapping("/admin/delete/{id}")
     public String deleteUser(@PathVariable(value = "id") long id, Model model) {
@@ -39,18 +52,48 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/updateUserForm/{id}")
-    public String showFormForUpdatingUser(@PathVariable(value = "id") long id, Model model) {
-        User user = myUserService.getUserById(id);
-
-        model.addAttribute("user", user);
-        return "updateUser";
-    }
 
     @PostMapping("/admin/updateUser")
     public String updateUser(@ModelAttribute("user") User user) {
         myUserService.updateUser(user);
         return "redirect:/admin";
     }
+
+    @GetMapping("/admin/adminEdit/{id}")
+    public String openEditModal(@PathVariable(value = "id") long id, Model model) {
+        User viewUser = myUserService.getUserById(id);
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("users", myUserService.getUsers());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("viewuser", viewUser);
+        model.addAttribute("userroles", Arrays.asList(viewUser.getRoles().toArray()));
+        return "adminEditWindow";
+    }
+
+    @GetMapping("/admin/adminDelete/{id}")
+    public String openDelteModal(@PathVariable(value = "id") long id, Model model) {
+        User viewUser = myUserService.getUserById(id);
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("users", myUserService.getUsers());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("viewuser", viewUser);
+        model.addAttribute("userroles", Arrays.asList(viewUser.getRoles().toArray()));
+        return "adminDeleteWindow";
+    }
+
+    @GetMapping("/admin/viewUser/{id}")
+    public String showAdminUserView(@PathVariable(value = "id") long id, Model model) {
+        User viewUser = myUserService.getUserById(id);
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("users", myUserService.getUsers());
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("viewuser", viewUser);
+        model.addAttribute("userroles", Arrays.asList(viewUser.getRoles().toArray()));
+        return "adminUserView";
+    }
+
+
+
+
 
 }

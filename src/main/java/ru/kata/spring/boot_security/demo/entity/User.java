@@ -17,9 +17,13 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String password;
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
+    private String name;
 
     private boolean expired = false;
     private boolean locked = false;
@@ -38,9 +42,10 @@ public class User implements UserDetails {
 
     }
 
-    public User(String username, String password) {
+    public User(String name, String username, String password) {
         this.username = username;
         this.password = password;
+        this.name = name;
     }
 
     public boolean isExpired() {
@@ -81,13 +86,21 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -135,11 +148,11 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return expired == user.expired && locked == user.locked && isEnabled() == user.isEnabled() && credentialsExpired == user.credentialsExpired && id.equals(user.id) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getUsername(), user.getUsername());
+        return isExpired() == user.isExpired() && isLocked() == user.isLocked() && isEnabled() == user.isEnabled() && isCredentialsExpired() == user.isCredentialsExpired() && getId().equals(user.getId()) && Objects.equals(getPassword(), user.getPassword()) && getUsername().equals(user.getUsername()) && Objects.equals(getName(), user.getName()) && Objects.equals(getRoles(), user.getRoles());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getPassword(), getUsername(), expired, locked, isEnabled(), credentialsExpired);
+        return Objects.hash(getId(), getPassword(), getUsername(), getName(), isExpired(), isLocked(), isEnabled(), isCredentialsExpired());
     }
 }

@@ -19,7 +19,7 @@ public class UserController {
     @GetMapping("/user")
     public String showUserPage(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", myUserService.getUserById(user.getId()));
+        model.addAttribute("currentuser", myUserService.getUserById(user.getId()));
 
         return "user";
     }

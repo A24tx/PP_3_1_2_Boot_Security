@@ -11,13 +11,15 @@ import java.util.Set;
 public class InitialUsers {
 
     public static void addInitialUsersAndRoles(UserService us, RoleRepository rr) {
-        User user = new User("user@user.com", "user");
-        User admin = new User("admin@admin.com", "admin");
+        User user = new User("user", "user@user.com", "user");
+        User admin = new User("admin", "admin@admin.com", "admin");
         Role userRole = new Role(1L, "ROLE_USER");
         Role adminRole = new Role(2L, "ROLE_ADMIN");
+        Role userRoleTest = new Role(3L, "ROLE_MANAGER");
 
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(userRole);
+        userRoles.add(userRoleTest);
         user.setRoles(userRoles);
 
         Set<Role> adminRoles = new HashSet<>();
@@ -27,8 +29,10 @@ public class InitialUsers {
 
         rr.save(userRole);
         rr.save(adminRole);
-
+        rr.save(userRoleTest);
+        System.out.println("saving user");
         us.saveUser(user);
+        System.out.println("saving adm");
         us.saveUser(admin);
 
 

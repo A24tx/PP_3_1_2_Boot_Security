@@ -45,4 +45,25 @@ public class Role implements GrantedAuthority {
     public int hashCode() {
         return Objects.hash(id, role_name);
     }
+
+    @Override
+    public String toString() {
+        return role_name.substring(5, role_name.length());
+    }
+
+    public String getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(String role_name) {
+        this.role_name = role_name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
